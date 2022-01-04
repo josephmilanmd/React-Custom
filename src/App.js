@@ -1,8 +1,9 @@
+import { SelectDropdown } from "./components/core";
 
 function App() {
   return (
     <div>
-     App
+      <SelectDropdown />
     </div>
   );
 }
