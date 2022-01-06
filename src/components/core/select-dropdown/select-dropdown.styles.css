@@ -1,0 +1,84 @@
+.custom-select *,
+.custom-select *::after,
+.custom-select *::before {
+  box-sizing: border-box;
+}
+.custom-select {
+  position: relative;
+  display: inline-block;
+  outline: none;
+}
+.custom-select > span {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-width: 12.5rem;
+  border: 0.03125rem solid #e9e9e9;
+  border-radius: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 1rem;
+  background: transparent;
+  color: black;
+  cursor: pointer;
+  user-select: none;
+}
+
+.custom-select > span::after {
+  content: "";
+  display: inline-block;
+  border: 4px solid transparent;
+  border-top-color: black;
+  margin-top: 4px;
+  margin-left: 0.75rem;
+}
+
+.custom-select:focus > span {
+  border-color: hsl(0, 75%, 70%);
+  outline: none;
+}
+
+.custom-select > ul {
+  display: block;
+  position: absolute;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border: 0.1rem solid #e9e9e9;
+  box-shadow: 0 0 0.5rem #00000033;
+  width: 100%;
+  border-top: none;
+  max-height: 12.5rem;
+  overflow-y: auto;
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: 200ms transform ease-in-out;
+}
+
+.custom-select > ul::-webkit-scrollbar {
+  width: 0.2rem;
+}
+
+/* .custom-select > ul::-webkit-scrollbar-track {
+} */
+
+.custom-select > ul::-webkit-scrollbar-thumb {
+  border-radius: 0.5rem;
+  background-color: #00000034;
+}
+
+.custom-select.custom-select-open > ul {
+  transform: scaleY(1);
+}
+
+.custom-select > ul > li {
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+}
+
+.custom-select > ul > li:hover {
+  background-color: hsl(0, 75%, 70%);
+}
+
+.custom-select > ul > li.custom-select-option-selected {
+  background-color: hsl(0, 75%, 54%);
+}
