@@ -52,19 +52,21 @@
   transform: scaleY(0);
   transform-origin: top;
   transition: 200ms transform ease-in-out;
+  scrollbar-color: #00000034 transparent;
+  scrollbar-width: none;
 }
 
 .custom-select > ul::-webkit-scrollbar {
-  width: 0.2rem;
+  width: 0;
 }
 
 /* .custom-select > ul::-webkit-scrollbar-track {
 } */
 
-.custom-select > ul::-webkit-scrollbar-thumb {
+/* .custom-select > ul::-webkit-scrollbar-thumb {
   border-radius: 0.5rem;
   background-color: #00000034;
-}
+} */
 
 .custom-select.custom-select-open > ul {
   transform: scaleY(1);
