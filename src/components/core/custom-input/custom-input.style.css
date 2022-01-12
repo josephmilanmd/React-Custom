@@ -1,19 +1,23 @@
 .custom-input {
   --border-color: #e9e9e9;
   --text-color: #000000;
-  --label-color: #000000;
-  --focus-color: hsl(0, 75%, 70%);
-  --error-color: red;
+  --label-color: var(--primary-color);
+  --placeholder-color: #6e6e6e;
+  --focus-color:  var(--primary-color);
+  --error-color: hsl(0, 75%, 70%);
 }
 .custom-input *,
 .custom-input *::after,
 .custom-input *::before {
   box-sizing: border-box;
+  padding: 0;
+  margin: 0;
 }
 .custom-input {
   position: relative;
   display: inline-block;
   outline: none;
+  margin: 1.5rem 0;
 }
 .custom-input > .input-container {
   display: flex;
@@ -46,28 +50,27 @@
 }
 
 .custom-input > small {
-  display: inline-block;
+  position: absolute;
+  top: 1rem;
+  left: 0.6rem;
   color: var(--error-color);
-  margin-left: 0.5em;
-  transform: translateY(-1rem);
   opacity: 0;
   pointer-events: none;
   user-select: none;
-  transition: transform 150ms ease-in, opacity 100ms ease-in 50ms;
+  transition: top 150ms ease-in, opacity 100ms ease-in 50ms;
 }
 .custom-input.input-error > small {
-  transform: translateY(0);
   opacity: 1;
+  top: 2rem;
 }
 
 .custom-input > .label {
   position: absolute;
-  color: var(--label-color);
+  color: var(--placeholder-color);
   top: 0.25rem;
-  left: 0.5rem;
+  left: 0.6rem;
   font-size: 1rem;
   pointer-events: none;
-  padding: 0 0.1rem;
   background-color: transparent;
   transition: all 250ms ease-in-out;
 }
@@ -76,4 +79,9 @@
   top: -1.15rem;
   left: 0rem;
   font-size: 0.75rem;
+  color: var(--label-color);
+}
+
+.custom-input.input-error > .label.on-focus {
+  color: var(--error-color);
 }

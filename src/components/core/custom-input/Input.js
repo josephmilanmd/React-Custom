@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from "react";
+import React, { useCallback, useEffect, useReducer } from "react";
 import "./custom-input.style.css";
 
 const INPUT_CHANGE = "INPUT_CHANGE";
@@ -12,6 +12,7 @@ const inputReducer = (state, action) => {
         ...state,
         value: action.value,
         isValid: action.isValid,
+        validationMessage: action.validationMessage,
       };
     case INPUT_BLUR:
       return {
@@ -33,47 +34,75 @@ const Input = (props) => {
   const [inputState, dispatch] = useReducer(inputReducer, {
     value: "",
     isValid: true,
+    validationMessage: "",
     touched: false,
     focused: false,
   });
 
-  const { initialValue, name } = props;
+  const {
+    initialValue,
+    name,
+    required,
+    email,
+    min,
+    max,
+    maxLength,
+    minLength,
+  } = props;
+
+  const validate = useCallback(
+    (text) => {
+      const emailRegex =
+        /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      if (required && text.trim().length === 0)
+        return {
+          isValid: false,
+          validationMessage: required.message,
+        };
+      if (email && !emailRegex.test(text.toLowerCase()))
+        return {
+          isValid: false,
+          validationMessage: email.message,
+        };
+      if (min != null && +text < min.value)
+        return {
+          isValid: false,
+          validationMessage: min.message,
+        };
+      if (max != null && +text > max.value)
+        return {
+          isValid: false,
+          validationMessage: max.message,
+        };
+      if (minLength != null && text.length < minLength.value)
+        return {
+          isValid: false,
+          validationMessage: minLength.message,
+        };
+      if (maxLength != null && text.length > maxLength.value)
+        return {
+          isValid: false,
+          validationMessage: maxLength.message,
+        };
+      return {
+        isValid: true,
+        validationMessage: "",
+      };
+    },
+    [required, email, min, max, maxLength, minLength]
+  );
 
   useEffect(() => {
-    // if (inputState.touched) {
-    //
-    // }
     dispatch({
       type: INPUT_CHANGE,
       value: initialValue,
-      isValid: validate(initialValue),
+      isValid: validate(initialValue).isValid,
+      validationMessage: validate(initialValue).validationMessage,
     });
-  }, [initialValue]);
-
-  const validate = (text) => {
-    const emailRegex =
-      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    let isValid = true;
-    if (props.required && text.trim().length === 0) {
-      isValid = false;
-    }
-    if (props.email && !emailRegex.test(text.toLowerCase())) {
-      isValid = false;
-    }
-    if (props.min != null && +text < props.min) {
-      isValid = false;
-    }
-    if (props.max != null && +text > props.max) {
-      isValid = false;
-    }
-    if (props.minLength != null && text.length < props.minLength) {
-      isValid = false;
-    }
-    return isValid;
-  };
+  }, [initialValue, validate]);
 
   const textChangeHandler = (text) => {
-    let isValid = validate(text);
+    let isValid = validate(text).isValid;
     props.onChange(name, text, isValid);
   };
 
@@ -87,7 +116,11 @@ const Input = (props) => {
   return (
     <div
       className={`custom-input ${
-        !inputState.isValid && inputState.touched ? "input-error" : ""
+        !inputState.isValid
+        //  && !inputState.focused 
+         && inputState.touched
+          ? "input-error"
+          : ""
       } ${props.className ? props.className : ""}`}
     >
       <span
@@ -100,7 +133,7 @@ const Input = (props) => {
       <div className="input-container">
         {/* <span className="input-left-icon">09</span> */}
         <input
-          //   type={inputType(type)}
+          type={props.type}
           className="input-style"
           value={initialValue}
           onChange={(e) => textChangeHandler(e.target.value)}
@@ -110,7 +143,7 @@ const Input = (props) => {
         {/* <span className="input-left-icon">09</span> */}
         {/* {showOrHide()} */}
       </div>
-      <small>Required field</small>
+      <small>{inputState.validationMessage}</small>
     </div>
   );
 };
